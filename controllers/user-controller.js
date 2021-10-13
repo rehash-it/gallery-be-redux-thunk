@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const _ = require('lodash');
 const { User, validateUser } = require('../models/user');
+const sendError = require('../utils/sendError');
 const APIFeatures = require('./../utils/APIFeatures');
 
 
@@ -11,18 +12,19 @@ exports.getUser = async (req, res) => {
 
 exports.createUser = async (req, res) => {
   const { error } = validateUser(req.body);
-  if (error) return res.status(400).send(error.details[0].message);
+  if (error) return sendError(error.details[0].message, res);
 
   let user = await User.findOne({ username: req.body.email });
-  if (user) return res.status(400).send('User already registered.');
+  if (user) return sendError('User already registered.', res);
 
-  user = new User(_.pick(req.body, ['username', 'password', 'isAdmin', 'isActive']));
+  user = new User(_.pick(req.body, ['username', 'email', 'password', 'isAdmin', 'isActive', 'account_type']));
   const salt = await bcrypt.genSalt(10);
   user.password = await bcrypt.hash(user.password, salt);
   await user.save();
 
   const token = user.generateAuthToken();
-  res.header('x-auth-token', token).send(_.pick(user, ['_id', 'username', 'isAdmin', 'isActive']));
+  res.header('x-auth-token', token)
+    .send({ ..._.pick(user, ['_id', 'username', 'isAdmin', 'isActive', 'account_type']), token });
 };
 
 exports.updateUser = async (req, res) => {

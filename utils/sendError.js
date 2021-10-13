@@ -1,0 +1,1 @@
+module.exports = sendError = (message, res, port) => res.status(port ? port : 400).json({ status: port ? port : 400, message })

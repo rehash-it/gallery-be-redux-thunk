@@ -13,27 +13,25 @@ const userSchema = new mongoose.Schema({
 
   password: {
     type: String,
-    required: true,
     minlength: 5,
     maxlength: 1024
   },
-
+  email: {
+    type: String,
+    required: true,
+    unique: true
+  },
   isAdmin: {
     type: Boolean,
-    required: true,
-    default:false,
+    default: false,
   },
-
   isActive: {
     type: Boolean,
-    required: true,
-    default:true,
+    default: true,
   },
-
-  loginLink: {
+  account_type: {
     type: String,
-    required: false,
-    unique: true
+    default: 'local'
   },
   createdAt: {
     type: Date,
@@ -51,9 +49,11 @@ const User = mongoose.model('User', userSchema);
 function validateUser(user) {
   const schema = Joi.object({
     username: Joi.string().min(5).max(255).required(),
-    password: Joi.string().min(5).max(255).required(),
+    password: Joi.string().min(5).max(255).allow(''),
+    email: Joi.string().email().allow(''),
     isAdmin: Joi.boolean().required(),
     isActive: Joi.boolean().required(),
+    account_type: Joi.string().allow('')
   });
   const validation = schema.validate(user);
   return validation;

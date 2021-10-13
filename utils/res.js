@@ -18,17 +18,22 @@ exports.errorReject = (reject, res) =>
     exports.send(true, reject.message || 'Internal server error', reject.status || 500, res);
 
 exports.reject = message => {
-    return {message, status: 400};
+    return { message, status: 400 };
 };
 
 exports.rejectStatus = (message, status) => {
-    return {message, status};
+    return { message, status };
 };
 
 exports.send = (error, message, status, res) => {
-    let data = {error, message, status};
+    let data = { error, message, status };
     if (error) {
         log.e(JSON.stringify(message, null, 3));
     }
     res.status(status).json(data);
 };
+exports.allowHeaders = (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    next();
+}
