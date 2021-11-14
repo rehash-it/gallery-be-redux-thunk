@@ -6,8 +6,15 @@ const { Event, validateEvent } = require('../models/event');
 const APIFeatures = require('./../utils/APIFeatures');
 
 exports.getGallery = async (req, res) => {
-  const gallery = await Gallery.find({ "status": "APPROVED" }).select({}).sort('description');
-  res.send(gallery);
+  const apiFeatures = new APIFeatures(Gallery.find({ "status": "APPROVED" }).select({}).sort('description'), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const galleryCount = await Gallery.find({ "status": "APPROVED" }).select({}).sort('description').countDocuments()
+  const gallery = await apiFeatures.query;
+  if (!gallery) return sendError("No gallery founds yet", res, 404)
+  res.send({ data: gallery, totall: galleryCount });
 };
 
 exports.createGallery = async (req, res) => {
@@ -116,12 +123,12 @@ exports.updateGalleryStatus = async (req, res) => {
   if (req.body.decision === 0) {
     decision = 'REJECTED';
   }
-  
+
   let galleries = [];
 
   let ids = [];
   ids = req.body.ids;
- 
+
   if (ids.length > 0) {
     for (let i = 0; i < ids.length; i++) {
       let result = await Gallery.findById(ids[i]);

@@ -1,0 +1,50 @@
+[
+    {
+        "_id": "60c9eb272b8a442a2d620db0",
+        "description": "Archeological",
+        "fileurl": "https://api.gallery.gov.et/arch.jpg",
+        "__v": 0
+    },
+    {
+        "_id": "60c9eb582b8a442a2d620db2",
+        "description": "Cultural",
+        "fileurl": "https://api.gallery.gov.et/aogvwruqw6se.png",
+        "__v": 0
+    },
+    {
+        "_id": "60c9eef52b8a442a2d620db4",
+        "description": "Ethiopian World Heritage",
+        "fileurl": "https://api.gallery.gov.et/Ethiopian-world-heritage1.jpg",
+        "__v": 0
+    },
+    {
+        "_id": "60c9edcb2b8a442a2d620db3",
+        "description": "Historical",
+        "fileurl": "https://api.gallery.gov.et/Historical-Ethiopia.jpg",
+        "__v": 0
+    },
+    {
+        "_id": "60c9ef772b8a442a2d620db5",
+        "description": "Museum",
+        "fileurl": "https://api.gallery.gov.et/National-Museum-of-Ethiopia.png",
+        "__v": 0
+    },
+    {
+        "_id": "60c9eb3e2b8a442a2d620db1",
+        "description": "Nature",
+        "fileurl": "https://api.gallery.gov.et/nature.jpg",
+        "__v": 0
+    },
+    {
+        "_id": "60c9eaed2b8a442a2d620dae",
+        "description": "Other",
+        "fileurl": "https://api.gallery.gov.et/tc.png",
+        "__v": 0
+    },
+    {
+        "_id": "60c9eb0b2b8a442a2d620daf",
+        "description": "Religous",
+        "fileurl": "https://api.gallery.gov.et/Religious.png",
+        "__v": 0
+    }
+]
