@@ -14,7 +14,7 @@ const sponsorController = require('../controllers/sponsor-controller');
 const advertisementController = require('../controllers/advertisement-controller');
 const upcomingeventsController = require('../controllers/upcoming-events-controller');
 const faqController = require('../controllers/faq-controller');
-
+const Comment = require('../controllers/comment-controller')
 const error = require('../middleware/error');
 var cors = require('cors')
 
@@ -148,6 +148,13 @@ module.exports = function (app) {
     app.use('/api', router.post('/signup', asyncMiddleware(authController.signUp)))
     app.use('/api', router.post('/signin', asyncMiddleware(authController.signin)))
     app.use('/api', router.get('/checkuser/:id', [auth], asyncMiddleware(authController.checkUser)))
+
+    app.use('/api', router.post('/comments', [auth], asyncMiddleware(Comment.createComment)));
+    app.use('/api', router.get('/comments', asyncMiddleware(Comment.getComments)));
+    app.use('/api', router.get('/comments/:gallery_id', asyncMiddleware(Comment.galleryComments)));
+    app.use('/api', router.put('/comments/:id', [auth], asyncMiddleware(Comment.updateComment)));
+    app.use('/api', router.delete('/comments/:id', [auth], asyncMiddleware(Comment.deleteComment)));
+
     app.use(error);
 }
 

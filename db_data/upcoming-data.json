@@ -1,0 +1,38 @@
+[
+    {
+        "_id": "60c9f0752b8a442a2d620db6",
+        "title": "Ethiopian Coffee week",
+        "organizer": "Travel Ethiopia",
+        "host": "Ministry of Culture and Torism",
+        "datefrom": "2021-06-16T00:00:00.000Z",
+        "dateto": "2021-06-30T00:00:00.000Z",
+        "description": "Ethiopian Coffee week Organized by Travel Ethiopia and organized by Ministry of Culture and Torism",
+        "place": "Addis Ababa, Ethiopia",
+        "fee": 0,
+        "imageurl": "https://api.gallery.gov.et/photo_2021-01-27_19-45-19.jpg"
+    },
+    {
+        "_id": "60ca44232b8a442a2d620dcc",
+        "title": "Art Gallery of Artist Lema Guya",
+        "organizer": "MoCT",
+        "host": "MoCT",
+        "datefrom": "2021-06-16T00:00:00.000Z",
+        "dateto": "2021-06-30T00:00:00.000Z",
+        "description": "Art Gallery of Artist Lema Guya",
+        "place": "Addis Ababa",
+        "fee": 100,
+        "imageurl": "https://api.gallery.gov.et/photo_2021-01-31_23-57-17.jpg"
+    },
+    {
+        "_id": "611cb0ee0d9ff6325eb85156",
+        "title": "Horticulture Fest",
+        "organizer": "MoCT",
+        "host": "Host A",
+        "datefrom": "2021-08-20T00:00:00.000Z",
+        "dateto": "2021-08-25T00:00:00.000Z",
+        "description": "Description for event",
+        "place": "Addis Ababa Mellinium Hall",
+        "fee": 250,
+        "imageurl": "https://api.gallery.gov.et/etweave.jpg"
+    }
+]

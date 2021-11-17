@@ -1,4 +1,6 @@
 const { Event, validateEvent } = require('../models/event');
+const sendError = require('../utils/sendError');
+const APIFeatures = require('./../utils/APIFeatures');
 
 exports.getEvent = async (req, res) => {
     const apiFeatures = new APIFeatures(Event.find().sort('description'), req.query)

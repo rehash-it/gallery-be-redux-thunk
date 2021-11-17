@@ -1,5 +1,6 @@
 const { UpcomingEvents, validateUpcomingEvents } = require('../models/upcoming_events');
 const APIFeatures = require('./../utils/APIFeatures');
+const sendError = require('../utils/sendError');
 
 exports.getUpcomingEvent = async (req, res) => {
     const apiFeatures = new APIFeatures(UpcomingEvents.find(), req.query)
@@ -9,9 +10,10 @@ exports.getUpcomingEvent = async (req, res) => {
         .paginate();
 
     const upcomingevent = await apiFeatures.query;
-    if (!upcomingevent) return res.status(404).send('No Upcoming Event(s) found with the provided data.');
+    const totall = await UpcomingEvents.find().countDocuments()
+    if (!upcomingevent) return sendError('No Upcoming Event(s) found with the provided data.', res, 404);
 
-    res.status(200).send(upcomingevent);    
+    res.status(200).send({ data: upcomingevent, totall });
 };
 
 exports.createUpcomingEvent = async (req, res) => {
