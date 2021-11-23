@@ -10,10 +10,9 @@ exports.getUpcomingEvent = async (req, res) => {
         .paginate();
 
     const upcomingevent = await apiFeatures.query;
-    const totall = await UpcomingEvents.find().countDocuments()
     if (!upcomingevent) return sendError('No Upcoming Event(s) found with the provided data.', res, 404);
 
-    res.status(200).send({ data: upcomingevent, totall });
+    res.status(200).send(upcomingevent);
 };
 
 exports.createUpcomingEvent = async (req, res) => {

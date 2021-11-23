@@ -20,7 +20,6 @@ app.post('/api/upload', (req, res) => {
   const myFile = req.files.file;
   myFile.mv(`${__dirname}/public/${myFile.name}`, function (err) {
     if (err) {
-      console.log(err)
       return res.status(500).send({ msg: "Error occured" });
     }
     return res.send({ name: myFile.name, path: `/${myFile.name}` });

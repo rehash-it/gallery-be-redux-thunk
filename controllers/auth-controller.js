@@ -30,7 +30,6 @@ exports.checkUser = async (req, res) => {
     res.send({ ..._.pick(user, ['_id', 'username', 'isAdmin', 'isActive', 'account_type', 'email']), token })
   }
   catch (err) {
-    console.log(err)
     sendError('Internal server error', res)
   }
 }
@@ -77,7 +76,6 @@ exports.signUp = async (req, res) => {
 
   }
   catch (err) {
-    console.log(err)
     sendError('internal server error', res, 500)
   }
 

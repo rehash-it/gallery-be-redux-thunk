@@ -11,8 +11,7 @@ exports.getEvent = async (req, res) => {
 
     const events = await apiFeatures.query;
     if (!events) return sendError("No Events founds yet", res, 404)
-    const eventsCount = await Event.find().sort('description').countDocuments()
-    res.send({ data: events, totall: eventsCount })
+    res.send(events)
 };
 
 exports.createEvent = async (req, res) => {

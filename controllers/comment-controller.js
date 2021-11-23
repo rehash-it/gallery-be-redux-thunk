@@ -10,9 +10,8 @@ exports.getComments = async (req, res) => {
         .paginate();
 
     const comments = await apiFeatures.query;
-    const commentsCount = await Comment.find().countDocuments()
-    if (!comment) return sendError("No Comments yet", res, 404)
-    res.send({ data: comments, totall: commentsCount });
+    if (!comments) return sendError("No Comments yet", res, 404)
+    res.send(comments);
 };
 
 exports.galleryComments = async (req, res) => {
@@ -23,9 +22,8 @@ exports.galleryComments = async (req, res) => {
         .limitFields()
         .paginate();
     const comments = await apiFeatures.query;
-    const commentsCount = await Comment.find().countDocuments()
     if (!comments) return sendError("No Comments on this gallery", res, 404)
-    res.send({ data: comments, totall: commentsCount });
+    res.send(comments);
 }
 
 exports.createComment = async (req, res) => {

@@ -8,9 +8,8 @@ exports.getGalleryCategory = async (req, res) => {
         .paginate();
 
     const albums = await apiFeatures.query;
-    const albumsCount = await GalleryCategory.find().sort('description').countDocuments()
     if (!albums) return sendError("No gallery founds yet", res, 404)
-    res.send({ data: albums, totall: albumsCount });
+    res.send(albums);
 };
 
 exports.createGalleryCategory = async (req, res) => {

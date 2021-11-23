@@ -11,11 +11,11 @@ exports.getGallery = async (req, res) => {
     .sort()
     .limitFields()
     .paginate();
-  const galleryCount = await Gallery.find({ "status": "APPROVED" }).select({}).sort('description').countDocuments()
   const gallery = await apiFeatures.query;
   if (!gallery) return sendError("No gallery founds yet", res, 404)
-  res.send({ data: gallery, totall: galleryCount });
+  res.send(gallery);
 };
+
 
 exports.createGallery = async (req, res) => {
   const { error } = validateGallery(req.body);
@@ -56,6 +56,18 @@ exports.createGallery = async (req, res) => {
 exports.updateLike = async (req, res) => {
   const gallery = await Gallery.findByIdAndUpdate(req.params.id, {
     $inc: { likes: 1 }
+  }, {
+    new: true
+  });
+
+  if (!gallery) return res.status(404).send('The Gallery with the given ID was not found.');
+
+  res.send(gallery);
+}
+
+exports.updateUnLike = async (req, res) => {
+  const gallery = await Gallery.findByIdAndUpdate(req.params.id, {
+    $inc: { likes: -1 }
   }, {
     new: true
   });
@@ -160,7 +172,13 @@ exports.deleteGallery = async (req, res) => {
 
 exports.getGalleryByCategory = async (req, res) => {
 
-  const gallery = await Gallery.find({ "category": req.params.id }).select({});
+  const apiFeatures =  new APIFeatures(Gallery.find({ "category": req.params.id }).select({}).populate('category eventType location'), req.query)
+  .filter()
+  .sort()
+  .limitFields()
+  .paginate();
+
+  const gallery = await apiFeatures.query;
 
   if (!gallery) return res.status(404).send('The Gallery with the given ID was not found.');
 
