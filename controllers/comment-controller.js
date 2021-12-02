@@ -43,22 +43,19 @@ exports.getComments = async (req, res) => {
     const arrangedComments = arrangeComments(comments)
     const page = paseInt(p)
     const limit = parseInt(l)
-    let data = arrangeComments.slice(((page * limit) - limit), (page * limit))
+    let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
     res.send(data)
 };
 
 exports.galleryComments = async (req, res) => {
+    const { page: p, limit: l } = req.query
     const { gallery_id } = req.params
-    const apiFeatures = new APIFeatures(Comment.find({ gallery_id: new ObjectId(gallery_id) }).
-        populate('user_id', '_id email username account_type'), req.query)
-        .filter()
-        .sort()
-        .limitFields()
-        .paginate();
-    const comments = await apiFeatures.query
-    if (!comments) return sendError("No Comments on this gallery", res, 404)
+    const comments = await Comment.find({ gallery_id }).populate('user_id')
     const arrangedComments = arrangeComments(comments)
-    res.send(arrangedComments);
+    const page = paseInt(p)
+    const limit = parseInt(l)
+    let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
+    res.send(data)
 }
 
 exports.createComment = async (req, res) => {
