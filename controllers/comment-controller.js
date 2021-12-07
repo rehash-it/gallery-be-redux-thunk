@@ -41,7 +41,7 @@ exports.getComments = async (req, res) => {
     const { page: p, limit: l } = req.query
     const comments = await Comment.find().populate('user_id')
     const arrangedComments = arrangeComments(comments)
-    const page = paseInt(p)
+    const page = parseInt(p)
     const limit = parseInt(l)
     let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
     res.send(data)
@@ -76,7 +76,7 @@ exports.createComment = async (req, res) => {
 exports.updateComment = async (req, res) => {
     if (error) return sendError(error.details[0].message, res)
 
-    const comment = await CommentCategory.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const comment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
     if (!comment) return sendError('The Comment Category with the given ID was not found.');
 

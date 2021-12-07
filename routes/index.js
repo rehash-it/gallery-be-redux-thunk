@@ -16,6 +16,7 @@ const upcomingeventsController = require('../controllers/upcoming-events-control
 const faqController = require('../controllers/faq-controller');
 const Comment = require('../controllers/comment-controller')
 const error = require('../middleware/error');
+const Report=require('../controllers/report-controller')
 var cors = require('cors')
 
 module.exports = function (app) {
@@ -157,7 +158,13 @@ module.exports = function (app) {
     app.use('/api', router.get('/comments/:gallery_id', asyncMiddleware(Comment.galleryComments)));
     app.use('/api', router.put('/comments/:id',  asyncMiddleware(Comment.updateComment)));
     app.use('/api', router.delete('/comments/:id',  asyncMiddleware(Comment.deleteComment)));
-
+    
+    app.use('/api',router.get('/reports',asyncMiddleware(Report.getAllReports))) //all reports
+    app.use('/api',router.get('/user_reports/:user_id',asyncMiddleware(Report.getUserReports))) //user reports
+    app.use('/api',router.get('/reports/:gallery_id',asyncMiddleware(Report.galleryReports))) //gallery reports
+    app.use('/api',router.get('/report/:gallery_id',asyncMiddleware(Report.checkReport))) //checks if the user is reported before or not
+    app.use('/api',router.post('/report',asyncMiddleware(Report.createReport)))
+     
     app.use(error);
 }
 
