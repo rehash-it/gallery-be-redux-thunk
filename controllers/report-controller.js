@@ -45,6 +45,7 @@ exports.checkReport = async (req, res) => {
   res.send({ canReport: true })
 
 }
+
 exports.createReport = async (req, res) => {
   try {
     const { error } = validateReport(req.body);

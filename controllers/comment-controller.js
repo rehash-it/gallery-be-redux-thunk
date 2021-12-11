@@ -52,7 +52,7 @@ exports.galleryComments = async (req, res) => {
     const { gallery_id } = req.params
     const comments = await Comment.find({ gallery_id }).populate('user_id')
     const arrangedComments = arrangeComments(comments)
-    const page = paseInt(p)
+    const page = parseInt(p)
     const limit = parseInt(l)
     let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
     res.send(data)
