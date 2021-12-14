@@ -159,6 +159,7 @@ module.exports = function (app) {
     app.use('/api', router.get('/comments/:gallery_id', asyncMiddleware(Comment.galleryComments)));
     app.use('/api', router.put('/comments/:id', asyncMiddleware(Comment.updateComment)));
     app.use('/api', router.delete('/comments/:id', asyncMiddleware(Comment.deleteComment)));
+    app.use('/api', router.get('/usercomments/:user_id', asyncMiddleware(Comment.userComments)));
 
     app.use('/api', router.get('/reports', asyncMiddleware(Report.getAllReports))) //all reports
     app.use('/api', router.get('/user_reports/:user_id', asyncMiddleware(Report.getUserReports))) //user reports

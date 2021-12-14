@@ -20,7 +20,7 @@ const search = async (req, res) => {
     const albums = await GalleryCategory.find()
     const events = await UpcomingEvents.find()
     /**news */
-    const searchedGalleries = Search(index, galleries, ['description', 'tags'])
+    const searchedGalleries = Search(index, galleries, ['description', 'tags', 'captions'])
     const searchedAlbums = Search(index, albums, ['description'])
     const searchedEvents = Search(index, events, ['description', 'host', 'organizer', 'title', 'place'])
     let result = {
@@ -42,12 +42,20 @@ const search = async (req, res) => {
 
 const Search = (index, datas, params) => {
     let newData = []
-    datas.forEach(data => {
+    let Datas = datas.map(d => {
+        return { ...d._doc, _id: d._doc._id.toString() }
+    })
+
+    Datas.forEach(data => {
         for (var i in data) {
             params.forEach(p => {
                 if (i === p) {
-                    matchString(index, data[i]) ? newData.push(data) : () => { }
+                    typeof data[i] === 'object' ? data[i].forEach(a => {
+                        matchString(index, a) ? newData.push(data) : () => { }
+                    })
+                        : matchString(index, data[i]) ? newData.push(data) : () => { }
                 }
+
             })
         }
     })

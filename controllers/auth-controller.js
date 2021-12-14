@@ -27,7 +27,7 @@ exports.checkUser = async (req, res) => {
     let user = await User.findOne({ _id: id });
     if (!token) return sendError('Invalid token!', res);
     if (!user) return sendError('Invalid user id!', res);
-    res.send({ ..._.pick(user, ['_id', 'username', 'isAdmin', 'isActive', 'account_type', 'email']), token })
+    res.send({ ..._.pick(user, ['_id', 'username', 'isAdmin', 'isActive', 'account_type', 'email', 'image']), token })
   }
   catch (err) {
     sendError('Internal server error', res)
@@ -61,18 +61,17 @@ exports.signUp = async (req, res) => {
   try {
     const { error } = validateUser(req.body);
     if (error) return sendError(error.details[0].message, res);
-
+    console.log(req.body)
     let user = await User.findOne({ email: req.body.email });
     if (user) return sendError('User already registered.', res);
-
-    user = new User(_.pick(req.body, ['username', 'email', 'password', 'isAdmin', 'isActive', 'account_type']));
+    user = new User(_.pick(req.body, ['username', 'email', 'password', 'isAdmin', 'isActive', 'account_type', 'image']));
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
     await user.save();
 
     const token = user.generateAuthToken();
     res.header('x-auth-token', token)
-      .send({ ..._.pick(user, ['_id', 'username', 'isAdmin', 'isActive', 'account_type', 'email']), token });
+      .send({ ..._.pick(user, ['_id', 'username', 'isAdmin', 'isActive', 'account_type', 'email', 'image']), token });
 
   }
   catch (err) {

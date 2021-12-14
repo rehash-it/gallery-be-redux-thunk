@@ -16,10 +16,13 @@ const commentSchema = new mongoose.Schema({
         ref: 'Gallery',
         required: true
     },
+    reply: {
+        type: Boolean,
+        req: true
+    },
     reply_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Comment',
-        required: true
     },
     createdAt: {
         type: Date,
@@ -35,6 +38,7 @@ function validateComment(comment) {
         user_id: Joi.string().required(),
         gallery_id: Joi.string().required(),
         description: Joi.string().required(),
+        reply: Joi.boolean().required()
     });
     const validation = schema.validate(comment);
     return validation;

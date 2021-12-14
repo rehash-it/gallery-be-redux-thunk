@@ -50,14 +50,25 @@ exports.getComments = async (req, res) => {
 exports.galleryComments = async (req, res) => {
     const { page: p, limit: l } = req.query
     const { gallery_id } = req.params
-    const comments = await Comment.find({ gallery_id }).populate('user_id')
+    const comments = await Comment.find({ gallery_id: new ObjectId(gallery_id) }).populate('user_id')
     const arrangedComments = arrangeComments(comments)
     const page = parseInt(p)
     const limit = parseInt(l)
     let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
     res.send(data)
 }
+exports.userComments = async (req, res) => {
+    const { user_id } = req.params
+    const apiFeatures = new APIFeatures(Comment.find({ user_id }).populate('gallery_id'), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate();
 
+    const comments = await apiFeatures.query;
+    if (!comments) return sendError("No comments founds yet", res, 404)
+    res.send(comments)
+}
 exports.createComment = async (req, res) => {
     try {
         const { error } = validateComment(req.body);
