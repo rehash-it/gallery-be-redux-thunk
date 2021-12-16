@@ -40,6 +40,8 @@ const Comment = mongoose.model('Comment', commentSchema);
 function validateComment(comment) {
     const schema = Joi.object({
         user_id: Joi.string().required(),
+        reply: Joi.boolean().required(),
+        reply_id: Joi.string().allow(''),
         gallery_id: Joi.string().required(),
         description: Joi.string().required(),
         reply: Joi.boolean().required(),
