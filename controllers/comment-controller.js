@@ -10,12 +10,14 @@ const arrangeComments = comments => {
             key: c._id.toString(),
             gallery_id: c.gallery_id.toString(),
             reply: c.reply,
+            hierarchy: c.hierarchy,
             reply_id: c.reply ? c.reply_id.toString() : '',
             user_id: {
                 _id: c.user_id._id.toString(),
                 email: c.user_id.email,
                 username: c.user_id.username,
-                account_type: c.user_id.account_type
+                account_type: c.user_id.account_type,
+                image: c.user_id.image
             },
             title: c.description,
             children: null
@@ -28,7 +30,7 @@ const arrangeComments = comments => {
     };
     for (i = 0; i < Comments.length; i += 1) {
         node = Comments[i];
-        if (node.reply_id) {
+        if (node.reply) {
             Comments[map[node.reply_id]].children.push(node);
         }
         else {
@@ -41,29 +43,40 @@ exports.getComments = async (req, res) => {
     const { page: p, limit: l } = req.query
     const comments = await Comment.find().populate('user_id')
     const arrangedComments = arrangeComments(comments)
-    const page = paseInt(p)
+    const page = parseInt(p)
     const limit = parseInt(l)
-    let data = arrangeComments.slice(((page * limit) - limit), (page * limit))
+    let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
     res.send(data)
 };
 
 exports.galleryComments = async (req, res) => {
+    const { page: p, limit: l } = req.query
     const { gallery_id } = req.params
-    const apiFeatures = new APIFeatures(Comment.find({ gallery_id: new ObjectId(gallery_id) }).
-        populate('user_id', '_id email username account_type'), req.query)
+    const comments = await Comment.find({ gallery_id }).populate('user_id', '_id username email image account_type')
+    const arrangedComments = arrangeComments(comments)
+    const page = parseInt(p)
+    const limit = parseInt(l)
+    console.log(((page * limit) - limit), (page * limit))
+
+    let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
+    res.send({ data, totall: arrangedComments.length })
+}
+exports.userComments = async (req, res) => {
+    const { user_id } = req.params
+    const apiFeatures = new APIFeatures(Comment.find({ user_id }).populate('gallery_id'), req.query)
         .filter()
         .sort()
         .limitFields()
         .paginate();
-    const comments = await apiFeatures.query
-    if (!comments) return sendError("No Comments on this gallery", res, 404)
-    const arrangedComments = arrangeComments(comments)
-    res.send(arrangedComments);
-}
 
+    const comments = await apiFeatures.query;
+    if (!comments) return sendError("No comments founds yet", res, 404)
+    res.send(comments)
+}
 exports.createComment = async (req, res) => {
     try {
         const { error } = validateComment(req.body);
+        console.log(error)
         if (error) return sendError(error.details[0].message, res);
 
         let CommentSave = new Comment(req.body);
@@ -79,7 +92,7 @@ exports.createComment = async (req, res) => {
 exports.updateComment = async (req, res) => {
     if (error) return sendError(error.details[0].message, res)
 
-    const comment = await CommentCategory.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const comment = await Comment.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
     if (!comment) return sendError('The Comment Category with the given ID was not found.');
 

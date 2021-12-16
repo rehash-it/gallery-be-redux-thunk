@@ -33,6 +33,9 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'local'
   },
+  image: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -53,7 +56,8 @@ function validateUser(user) {
     email: Joi.string().email().allow(''),
     isAdmin: Joi.boolean().required(),
     isActive: Joi.boolean().required(),
-    account_type: Joi.string().allow('')
+    account_type: Joi.string().allow(''),
+    image: Joi.string().allow('')
   });
   const validation = schema.validate(user);
   return validation;

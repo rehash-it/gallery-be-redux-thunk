@@ -1,7 +1,15 @@
 const {Lookup, validateLookup} = require('../models/lookup');
+const APIFeatures = require('./../utils/APIFeatures');
+
 exports.getLookup =async (req, res) => {
-    const lookup = await Lookup.find().sort('description');
-    res.send(lookup);
+      const apiFeatures = new APIFeatures(Lookup.find().sort('description'), req.query)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+  const lookup= await apiFeatures.query;
+  if (!lookup) return sendError("No report founds yet", res, 404)
+  res.send(lookup);
 };
 
 exports.createLookup =async (req, res) => {
