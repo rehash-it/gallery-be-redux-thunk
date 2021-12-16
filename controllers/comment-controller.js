@@ -10,12 +10,14 @@ const arrangeComments = comments => {
             key: c._id.toString(),
             gallery_id: c.gallery_id.toString(),
             reply: c.reply,
+            hierarchy: c.hierarchy,
             reply_id: c.reply ? c.reply_id.toString() : '',
             user_id: {
                 _id: c.user_id._id.toString(),
                 email: c.user_id.email,
                 username: c.user_id.username,
-                account_type: c.user_id.account_type
+                account_type: c.user_id.account_type,
+                image: c.user_id.image
             },
             title: c.description,
             children: null
@@ -28,7 +30,7 @@ const arrangeComments = comments => {
     };
     for (i = 0; i < Comments.length; i += 1) {
         node = Comments[i];
-        if (node.reply_id) {
+        if (node.reply) {
             Comments[map[node.reply_id]].children.push(node);
         }
         else {
@@ -50,12 +52,14 @@ exports.getComments = async (req, res) => {
 exports.galleryComments = async (req, res) => {
     const { page: p, limit: l } = req.query
     const { gallery_id } = req.params
-    const comments = await Comment.find({ gallery_id: new ObjectId(gallery_id) }).populate('user_id')
+    const comments = await Comment.find({ gallery_id }).populate('user_id', '_id username email image account_type')
     const arrangedComments = arrangeComments(comments)
     const page = parseInt(p)
     const limit = parseInt(l)
+    console.log(((page * limit) - limit), (page * limit))
+
     let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
-    res.send(data)
+    res.send({ data, totall: arrangedComments.length })
 }
 exports.userComments = async (req, res) => {
     const { user_id } = req.params
@@ -72,6 +76,7 @@ exports.userComments = async (req, res) => {
 exports.createComment = async (req, res) => {
     try {
         const { error } = validateComment(req.body);
+        console.log(error)
         if (error) return sendError(error.details[0].message, res);
 
         let CommentSave = new Comment(req.body);
