@@ -16,17 +16,24 @@ const getPageData = (query, data) => {
 const search = async (req, res) => {
     const query = req.query
     const { index } = req.params
+    const category = req.query.category
     const galleries = await Gallery.find()
+    const galleriesCategory = category ? (await Gallery.find({ category })) : ([])
     const albums = await GalleryCategory.find()
     const events = await UpcomingEvents.find()
     /**news */
     const searchedGalleries = Search(index, galleries, ['description', 'tags', 'captions'])
+    const searchGalleriesCategory = Search(index, galleriesCategory, ['description', 'tags', 'captions'])
     const searchedAlbums = Search(index, albums, ['description'])
     const searchedEvents = Search(index, events, ['description', 'host', 'organizer', 'title', 'place'])
     let result = {
         galleries: {
             data: getPageData(query, searchedGalleries),
             length: searchedGalleries.length
+        },
+        galleriesCategory: {
+            data: getPageData(query, searchGalleriesCategory),
+            length: searchGalleriesCategory.length
         },
         albums: {
             data: getPageData(query, searchedAlbums),
