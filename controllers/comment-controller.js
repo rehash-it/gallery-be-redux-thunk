@@ -56,7 +56,6 @@ exports.galleryComments = async (req, res) => {
     const arrangedComments = arrangeComments(comments)
     const page = parseInt(p)
     const limit = parseInt(l)
-    console.log(((page * limit) - limit), (page * limit))
 
     let data = arrangedComments.slice(((page * limit) - limit), (page * limit))
     res.send({ data, totall: arrangedComments.length })
