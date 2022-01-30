@@ -21,7 +21,7 @@ const advertisementSchema = new mongoose.Schema({
     //     type: Number,
     // },
     status: {
-        type: String,
+        type: String, //
         required: true
     },
     from: {
