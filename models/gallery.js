@@ -1,29 +1,24 @@
-const Joi = require('joi');
-const mongoose = require('mongoose');
-const galleryTypeSchema = require('./lookup');
-const eventTypeSchema = require('./event');
-const tagSchema = require('./lookup');
-const galleryCategorySchema = require('./gallery_category');
-const { boolean } = require('joi');
+const Joi = require("joi");
+const mongoose = require("mongoose");
+const galleryTypeSchema = require("./lookup");
+const eventTypeSchema = require("./event");
+const tagSchema = require("./lookup");
+const galleryCategorySchema = require("./gallery_category");
+const { boolean } = require("joi");
 const gallerySchema = new mongoose.Schema({
   type: {
     // type: galleryTypeSchema,
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Lookup',
-    required: true
-  },
-  fileurl: {
-    type: String,
+    ref: "Lookup",
     required: true,
-    unique: true
   },
   eventType: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Event'
+    ref: "Event",
   },
-  location:{
+  location: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Lookup'
+    ref: "Lookup",
   },
   description: {
     type: String,
@@ -31,14 +26,18 @@ const gallerySchema = new mongoose.Schema({
   },
   caption: {
     type: String,
-    required: false
+    required: false,
   },
   views: {
     type: Number,
     default: 0,
-    required: false
+    required: false,
   },
   istangible: {
+    type: Boolean,
+    required: true,
+  },
+  isDownloadable: {
     type: Boolean,
     required: true,
   },
@@ -47,44 +46,56 @@ const gallerySchema = new mongoose.Schema({
   },
   category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'GalleryCategory'
-  },
-  capturedYear: {
-    type: Date,
+    ref: "GalleryCategory",
   },
   status: {
     type: String,
     required: true,
   },
+  likes: {
+    type: Number,
+    default: 0,
+    required: false,
+  },
+  createdBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
+  imagesValues: [
+    {
+      url: { type: String, required: true },
+      latitude: { type: Number, default: 0 },
+      longitude: { type: Number, default: 0 },
+      capturedYear: {
+        type: Date,
+        default: Date.now(),
+      },
+    },
+  ],
   createdAt: {
     type: Date,
-    default: Date.now
+    default: Date.now,
   },
-  likes:{
-    type: Number,
-    default:0,
-    required:false
-  },
-
 });
 
-gallerySchema.index({ '$**': 'text' })
+gallerySchema.index({ "$**": "text" });
 
-const Gallery = mongoose.model('Gallery', gallerySchema);
+const Gallery = mongoose.model("Gallery", gallerySchema);
 
 function validateGallery(gallery) {
   const schema = Joi.object({
     type: Joi.string().required(),
-    fileurl: Joi.string().required(),
+    imagesValues: Joi.array().required(),
     eventType: Joi.string().required(),
     description: Joi.string().required(),
     caption: Joi.string().required(),
     istangible: Joi.boolean().required(),
+    isDownloadable: Joi.boolean().required(),
     tags: Joi.array().items(Joi.string()),
     category: Joi.string().required(),
     status: Joi.string().required(),
-    capturedYear: Joi.string().required(),
-    location:Joi.string().required()
+    location: Joi.string().required(),
+    createdBy: Joi.string(),
   });
   const validation = schema.validate(gallery);
   return validation;
