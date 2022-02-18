@@ -6,13 +6,15 @@ const { Event, validateEvent } = require("../models/event");
 const APIFeatures = require("./../utils/APIFeatures");
 
 exports.getGallery = async (req, res) => {
-  const apiFeatures = new APIFeatures(Gallery.find({ status: "APPROVED" }).sort("description"), req.query)
+  const apiFeatures = new APIFeatures(
+    Gallery.find({ status: "APPROVED" }).sort("description"),
+    req.query
+  )
     .filter()
     .sort()
     .limitFields()
     .paginate();
   const gallery = await apiFeatures.query;
-  console.log(gallery);
   if (!gallery) return sendError("No gallery founds yet", res, 404);
   res.send(gallery);
 };
@@ -31,7 +33,6 @@ exports.createGallery = async (req, res) => {
   if (!location) return res.status(400).send("Invalid Location");
 
   const eventType = await Event.findById(req.body.eventType);
-  console.log(Event, req.body.eventType);
   if (!eventType) return res.status(400).send("Invalid Event Type");
 
   let gallery = new Gallery({
@@ -212,7 +213,10 @@ exports.getGalleryById = async (req, res) => {
 };
 
 exports.getGalleries = async (req, res) => {
-  const apiFeatures = new APIFeatures(Gallery.find().populate("category eventType location"), req.query)
+  const apiFeatures = new APIFeatures(
+    Gallery.find().populate("category eventType location"),
+    req.query
+  )
     .filter()
     .sort()
     .limitFields()
