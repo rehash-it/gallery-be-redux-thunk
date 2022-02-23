@@ -37,6 +37,10 @@ const advertisementSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    url:{
+        type: String,
+        required: true
     }
 });
 
@@ -53,6 +57,7 @@ function validateAdvertisement(advertisement) {
         to: Joi.date().required(),
         status: Joi.string().required(),
         description: Joi.string(),
+        url: Joi.string().required(),
     });
     const validation = schema.validate(advertisement);
     return validation;

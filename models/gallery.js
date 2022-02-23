@@ -94,7 +94,10 @@ function validateGallery(gallery) {
     tags: Joi.array().items(Joi.string()),
     category: Joi.string().required(),
     status: Joi.string().required(),
-    location: Joi.string().required(),
+    capturedYear: Joi.string().required(),
+    location:Joi.string().required(),
+    imagesArray: Joi.array().items(Joi.string()),
+    imagesValues: Joi.array().items(Joi.object()),
     createdBy: Joi.string(),
   });
   const validation = schema.validate(gallery);

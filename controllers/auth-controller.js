@@ -87,4 +87,3 @@ function validate(req) {
   const validation = schema.validate(req);
   return validation;
 }
-

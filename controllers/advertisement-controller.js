@@ -39,6 +39,7 @@ exports.createAdvertisement = async (req, res) => {
         to: req.body.to,
         status: req.body.status,
         description: req.body.description,
+        url: req.body.url,
     });
     advertisement = await advertisement.save();
     res.send(advertisement);
@@ -57,6 +58,7 @@ exports.updateAdvertisement = async (req, res) => {
         to: req.body.to,
         status: req.body.status,
         description: req.body.description,
+        url: req.body.url,
     }, {
         new: true
     });

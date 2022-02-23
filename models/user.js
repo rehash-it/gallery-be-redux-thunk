@@ -39,7 +39,17 @@ const userSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
-  }
+  },
+  userType: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Lookup",
+  },
+  isModerator: {
+    type: Boolean,
+    required: true,
+    default: false,
+  },
 });
 
 userSchema.methods.generateAuthToken = function () {
@@ -57,6 +67,7 @@ function validateUser(user) {
     isAdmin: Joi.boolean().required(),
     isActive: Joi.boolean().required(),
     account_type: Joi.string().allow(''),
+    isModerator: Joi.boolean().required(),
     image: Joi.string().allow('')
   });
   const validation = schema.validate(user);
